@@ -2,23 +2,20 @@
 
   <div class="row-fluid">
     <div class="span6 offset3">
-      <h2><h3 class="help-header centered">Welcome to <img class='no-shadow' ng-src='{{branding.appLogo}}'></h3>
-      </h2>
-    </div>
-  </div>
-  <div class="row-fluid">
-    <div class="span6 offset3">
-      <div class="centered">
-        <h2>{{hello}}</h2>
-        <h2 class="cpu-display alert alert-info">CPU Load: {{cpuLoad | number:3}}</h2>
-      </div>
-    </div>
-  </div>
-  <div class="row-fluid">
-    <div class="span6 offset3">
       <p class="centered">
         Eureka plugin allows to fetch all servers known to Eureka instance into Hawt.io connections list
       </p>
     </div>
   </div>
+
+  <div class="span4"></div>
+  <div class="span4">
+    <div simple-form name="settings" data="formConfig" entity="formEntity"></div>
+    <p></p>
+    <div>
+      <button class="btn btn-primary pull-right" ng-disabled="!forms.settings.$valid" ng-click="connect()">{{buttonText()}}</button>
+    </div>
+  </div>
+  <div class="span4"></div>
+
 </div>

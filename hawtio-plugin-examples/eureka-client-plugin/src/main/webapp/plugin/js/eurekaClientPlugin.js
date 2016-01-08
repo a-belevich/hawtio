@@ -58,9 +58,12 @@ var EurekaClient = (function(EurekaClient) {
          * in place when a route doesn't match any routes that
          * routeProvider has been configured with.
          */
-        $routeProvider.
-            when('/eureka_client_plugin', {
+        $routeProvider
+            .when('/eureka_client_plugin/list', {
               templateUrl: EurekaClient.templatePath + 'eurekaclient.html'
+            })
+            .when('/eureka_client_plugin/settings', {
+              templateUrl: EurekaClient.templatePath + 'settings.html'
             });
       });
 
@@ -114,7 +117,7 @@ var EurekaClient = (function(EurekaClient) {
       content: "Eureka",
       title: "Eureka client plugin",
       isValid: function(workspace) { return true; },
-      href: function() { return "#/eureka_client_plugin"; },
+      href: function() { return "#/eureka_client_plugin/list"; },
       isActive: function(workspace) { return workspace.isLinkActive("eureka_client_plugin"); }
       
     });
@@ -145,7 +148,59 @@ var EurekaClient = (function(EurekaClient) {
     function render(response) {
       $scope.cpuLoad = response.value['ProcessCpuLoad'];
       Core.$apply($scope);
-    }
+    };
+
+    $scope.buttonText = function() { return "Fetch"; };
+
+    $scope.forms = {};
+
+    $scope.formEntity = angular.fromJson(localStorage[EurekaClient.SETTINGS_KEY]) || {};
+    $scope.formConfig = {
+      properties: {
+        host: {
+          description: "Eureka Server Hostname",
+          'type': 'java.lang.String',
+          required: true
+        },
+        nickname: {
+          description: "Eureka Server Nickname",
+          'type': 'java.lang.String',
+          required: true
+        },
+        ports: {
+          description: 'Eureka Server Port',
+          'type': 'Integer',
+          tooltip: 'Comma separated list of ports to connect to, by default 6667 for non-SSL and 6697 for SSL connections are used'
+        },
+        useSSL: {
+          description: 'SSL',
+          'type': 'boolean'
+        },
+        autostart: {
+          description: 'Connect at startup',
+          'type': 'boolean',
+          tooltip: 'Whether or not the Eureka connection should be started as soon as you log into hawtio'
+        },
+        channels: {
+          description: 'Channels',
+          'type': 'java.lang.String',
+          tooltip: 'Space separated list of channels to connect to when the IRC connection is started'
+        }
+      }
+    };
+
+    $scope.$watch('formEntity', function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        localStorage[EurekaClient.SETTINGS_KEY] = angular.toJson(newValue);
+      }
+    }, true);
+
+    $scope.connect = function() {
+      if ($scope.forms.settings.$valid) {
+        EurekaClientService.connect($scope.formEntity);
+      }
+    };
+    
   };
 
   return EurekaClient;
