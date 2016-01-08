@@ -192,7 +192,7 @@
 	<module>hawtio-custom-app</module>
     -->
     <!-- TODO - a bit broken at the moment, well on on some computers -->
-    <module>hawtio-api-docs</module>
+    <!-- module>hawtio-api-docs</module -->
   </modules>
 
   <build>
