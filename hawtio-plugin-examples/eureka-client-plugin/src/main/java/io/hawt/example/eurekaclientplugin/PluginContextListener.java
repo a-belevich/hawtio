@@ -13,6 +13,7 @@ public class PluginContextListener implements ServletContextListener {
   private static final Logger LOG = LoggerFactory.getLogger(PluginContextListener.class);
 
   HawtioPlugin plugin = null;
+  EurekaClientHandler handler = null;
 
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -25,6 +26,9 @@ public class PluginContextListener implements ServletContextListener {
     plugin.setScripts(context.getInitParameter("plugin-scripts"));
     plugin.setDomain(null);
     plugin.init();
+    
+    handler = new EurekaClientHandler();
+    handler.init();
 
     LOG.info("Initialized {} plugin", plugin.getName());
   }

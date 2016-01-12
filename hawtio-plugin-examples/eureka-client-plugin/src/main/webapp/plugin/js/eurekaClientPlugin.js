@@ -21,7 +21,7 @@ var EurekaClient = (function(EurekaClient) {
    *
    * This plugin's logger instance
    */
-  EurekaClient.log = Logger.get('EurekaClient');
+  EurekaClient.log = Logger.get(EurekaClient.pluginName);
 
   /**
    * @property contextPath
@@ -30,7 +30,7 @@ var EurekaClient = (function(EurekaClient) {
    * The top level path of this plugin on the server
    *
    */
-  EurekaClient.contextPath = "/eureka-client-plugin/";
+  EurekaClient.contextPath = '/eureka-client-plugin/';
 
   /**
    * @property templatePath
@@ -40,6 +40,9 @@ var EurekaClient = (function(EurekaClient) {
    */
   EurekaClient.templatePath = EurekaClient.contextPath + "plugin/html/";
 
+  EurekaClient.mbean = "hawtio:type=EurekaClient";
+
+  
   /**
    * @property module
    * @type {object}
@@ -49,7 +52,7 @@ var EurekaClient = (function(EurekaClient) {
    * workspace, viewRegistry and layoutFull used by the
    * run function
    */
-  EurekaClient.module = angular.module('eureka_client_plugin', ['hawtioCore'])
+  EurekaClient.module = angular.module(EurekaClient.pluginName, ['hawtioCore'])
       .config(function($routeProvider) {
 
         /**
@@ -59,11 +62,8 @@ var EurekaClient = (function(EurekaClient) {
          * routeProvider has been configured with.
          */
         $routeProvider
-            .when('/eureka_client_plugin/list', {
+            .when("/" + EurekaClient.pluginName, {
               templateUrl: EurekaClient.templatePath + 'eurekaclient.html'
-            })
-            .when('/eureka_client_plugin/settings', {
-              templateUrl: EurekaClient.templatePath + 'settings.html'
             });
       });
 
@@ -88,7 +88,7 @@ var EurekaClient = (function(EurekaClient) {
 
     // tell the app to use the full layout, also could use layoutTree
     // to get the JMX tree or provide a URL to a custom layout
-    viewRegistry["eureka_client_plugin"] = layoutFull;
+    viewRegistry[EurekaClient.pluginName] = layoutFull;
 
     /* Set up top-level link to our plugin.  Requires an object
        with the following attributes:
@@ -117,8 +117,8 @@ var EurekaClient = (function(EurekaClient) {
       content: "Eureka",
       title: "Eureka client plugin",
       isValid: function(workspace) { return true; },
-      href: function() { return "#/eureka_client_plugin/list"; },
-      isActive: function(workspace) { return workspace.isLinkActive("eureka_client_plugin"); }
+      href: function() { return "#/" + EurekaClient.pluginName; },
+      isActive: function(workspace) { return workspace.isLinkActive(EurekaClient.pluginName); }
       
     });
 
@@ -133,7 +133,7 @@ var EurekaClient = (function(EurekaClient) {
    * service from hawtioCore
    *
    */
-  EurekaClient.EurekaClientController = function($scope, jolokia) {
+  EurekaClient.EurekaClientController = function($scope, EurekaClientService, jolokia) {
     $scope.hello = "Hello world!";
     $scope.cpuLoad = "0";
 
@@ -167,10 +167,10 @@ var EurekaClient = (function(EurekaClient) {
           'type': 'java.lang.String',
           required: true
         },
-        ports: {
+        port: {
           description: 'Eureka Server Port',
           'type': 'Integer',
-          tooltip: 'Comma separated list of ports to connect to, by default 6667 for non-SSL and 6697 for SSL connections are used'
+          tooltip: 'Port to connect to, 8761 by default'
         },
         useSSL: {
           description: 'SSL',
