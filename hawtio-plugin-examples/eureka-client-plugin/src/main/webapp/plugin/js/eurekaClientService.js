@@ -17,7 +17,6 @@ var EurekaClient = (function(EurekaClient) {
 
 			render: function(xml) {
 //				EurekaClient.log.info(EurekaClient.pluginName, xml);
-//				console.log("Eureka.render: " + xml);
 				var connections = [];
 
 				connections.add({

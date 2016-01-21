@@ -84,6 +84,7 @@ var EurekaClient = (function(EurekaClient) {
 
     EurekaClient.log.info(EurekaClient.pluginName, " loaded");
 
+//    Core.addCSS(EurekaClient.contextPath + "plugin/css/eurekaclient.css");
     Core.addCSS(EurekaClient.contextPath + "plugin/css/eurekaclient.css");
 
     // tell the app to use the full layout, also could use layoutTree
@@ -134,26 +135,21 @@ var EurekaClient = (function(EurekaClient) {
    *
    */
   EurekaClient.EurekaClientController = function($scope, EurekaClientService, jolokia) {
-    $scope.hello = "Hello world!";
-    $scope.cpuLoad = "0";
-
-    // register a watch with jolokia on this mbean to
-    // get updated metrics
-    Core.register(jolokia, $scope, {
-      type: 'read', mbean: 'java.lang:type=OperatingSystem',
-      arguments: []
-    }, onSuccess(render));
-
-    // update display of metric
-    function render(response) {
-      $scope.cpuLoad = response.value['ProcessCpuLoad'];
-      Core.$apply($scope);
-    };
+    // register a watch with jolokia on this mbean to get updated metrics
+//    Core.register(jolokia, $scope, {
+//      type: 'read', mbean: 'java.lang:type=OperatingSystem',
+//      arguments: []
+//    }, onSuccess(render));
+//
+//    // update display of metric
+//    function render(response) {
+//      Core.$apply($scope);
+//    };
 
     $scope.buttonText = function() { return "Fetch"; };
 
     $scope.forms = {};
-
+    
     $scope.formEntity = angular.fromJson(localStorage[EurekaClient.SETTINGS_KEY]) || {};
     $scope.formConfig = {
       properties: {
@@ -171,20 +167,6 @@ var EurekaClient = (function(EurekaClient) {
           description: 'Eureka Server Port',
           'type': 'Integer',
           tooltip: 'Port to connect to, 8761 by default'
-        },
-        useSSL: {
-          description: 'SSL',
-          'type': 'boolean'
-        },
-        autostart: {
-          description: 'Connect at startup',
-          'type': 'boolean',
-          tooltip: 'Whether or not the Eureka connection should be started as soon as you log into hawtio'
-        },
-        channels: {
-          description: 'Channels',
-          'type': 'java.lang.String',
-          tooltip: 'Space separated list of channels to connect to when the IRC connection is started'
         }
       }
     };

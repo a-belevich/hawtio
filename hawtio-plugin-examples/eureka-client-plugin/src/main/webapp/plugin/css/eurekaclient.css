@@ -3,6 +3,6 @@
   margin-bottom: 4em;
 }
 
-.cpu-display {
-  display: inline-block;
+.dropdown.perspective-selector .dropdown-menu {
+  width: 640px;
 }
